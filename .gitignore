@@ -13,7 +13,7 @@
 # Used by dotenv library to load environment variables.
 # .env
 
-/config/*
+/config/*.yml
 /.idea
 
 ## Specific to RubyMotion:

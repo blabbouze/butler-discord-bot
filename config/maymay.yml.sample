@@ -1,0 +1,6 @@
+commandName: # (command name can't contains space)
+  asset: 'nameOfAsset' # (located in assets folder)
+  x: 0 # text x position (default 0)
+  y: 0 # text y position (default 0)
+  textHandle: disrespect # name of function to call to generate the text (optional, see handles/textHandles.rb for details)
+
