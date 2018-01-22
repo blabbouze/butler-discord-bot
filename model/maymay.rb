@@ -5,9 +5,10 @@ require_relative '../handles/textHandles.rb'
 class Maymay
 
   # Name of the folder that will contains maymay with generated text
+  # If you change this please update .gitignore to not push generated maymay into git.
   MAYMAY_OUT_FOLDER = 'out'
 
-  # Execute gm with given args
+  # Constructor
   #
   # @param [Hash] args maymay options
   #

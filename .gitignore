@@ -19,6 +19,8 @@
 assets/*
 !assets/impact-opt.ttf
 
+out/*
+
 ## Specific to RubyMotion:
 .dat*
 .repl_history
