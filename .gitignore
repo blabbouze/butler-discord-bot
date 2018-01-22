@@ -16,6 +16,9 @@
 /config/*.yml
 /.idea
 
+assets/*
+!assets/impact-opt.ttf
+
 ## Specific to RubyMotion:
 .dat*
 .repl_history
