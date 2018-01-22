@@ -1,32 +1,55 @@
 require 'discordrb'
 require 'yaml'
 
+require_relative 'model/maymay.rb'
 
-config = YAML.load_file('config/creds.yml')
 
-
+# Configuration
+creds = YAML.load_file('config/creds.yml')
+maymays_config = YAML.load_file('config/maymay.yml')
 
 # Minimum time (second) the bot have to wait before rebooting automatically
 TIME_REBOOT = 300
+
+# Data
+maymays = {}
 
 begin
   # Safety, don't restart too often
   uptime = Time.now
 
-
   ############
   # Init bot #
   ############
 
-  puts config['token']
-  puts config['clientID']
-
-  bot = Discordrb::Commands::CommandBot.new token: config['token'],
-                                            client_id: config['clientID'],
+  bot = Discordrb::Commands::CommandBot.new token: creds['token'],
+                                            client_id: creds['clientID'],
                                             prefix: '/'
 
 
+  #######################
+  # Init maymay cmmands #
+  #######################
+  maymays_config.each_pair do |command_name, command_args|
+    # Identify command with symbols
+    id_command = command_name.to_sym
+    # Create model from configuration file
+    maymays[id_command] = Maymay.new(command_args)
 
+    # Create discord command
+    bot.command id_command do |event, *text|
+      # Remove command invocation
+      event.message.delete
+
+      # Generate requested maymay
+      generated_maymay = maymays[event.command.name].generate(text.join(' '))
+
+      # Send it to the current text chanel
+      event << event.author.username
+      event.attach_file(File.open(generated_maymay,'r'))
+    end
+
+  end
 
   # Start the bot (must be done at the end)
   bot.run
