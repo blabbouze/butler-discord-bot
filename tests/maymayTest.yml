@@ -1,0 +1,10 @@
+victime:
+  asset: 'vincent.png'
+  x: 40
+  y: 280
+  textHandle: disrespect
+champignon:
+  asset: 'mdr'
+  x: 20
+  y: 100
+
