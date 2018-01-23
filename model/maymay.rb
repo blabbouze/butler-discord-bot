@@ -18,7 +18,7 @@ class Maymay
   # @option args [String]  :textColor   [Optional] Color of the drawn text. Format rrggbb (default = 'ffffff'). # will be prepended automaticall.
   # @option args [String]  :textHandle  [Optional] Text handle (see handles folder for more informations about handles)
   def initialize(args)
-    @asset = "assets/#{args['asset']}"
+    @asset = args['asset']
 
     @x_txt_coord = args['x']
     @x_txt_coord = 0 if @x_txt_coord.nil?
@@ -53,7 +53,7 @@ class Maymay
 
     # Create maymay with given arguments
     args = {
-      input: @asset,
+      input: "assets/#{@asset}",
       output: output_file_path,
       color: @text_color,
       x: @x_txt_coord,
