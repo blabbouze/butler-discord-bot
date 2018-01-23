@@ -43,8 +43,18 @@ class Maymay
     # Call text handle to modify text if necessary
     text = HANDLES::TEXT.send(@text_handle, text, '') if @text_handle
 
+    # Center text if needed
+    image_width = 500
+    char_width = 26
+
+    lines = format_text(text, 22)
+    line_width =  lines.map(&:size).max * char_width
+
+    x = image_width / 2 - line_width / 2 + 20
+    x = @x_txt_coord if x < @x_txt_coord
+
     # Format message
-    message = format_text(text, 22).join('\n')
+    message = lines.join('\n')
 
     # Create output directory if it doesn't exists
     Dir.mkdir(MAYMAY_OUT_FOLDER) unless Dir.exists?(MAYMAY_OUT_FOLDER)
@@ -56,7 +66,7 @@ class Maymay
       input: "assets/#{@asset}",
       output: output_file_path,
       color: @text_color,
-      x: @x_txt_coord,
+      x: x,
       y: @y_txt_coord,
       text: message
     }
