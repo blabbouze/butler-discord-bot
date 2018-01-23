@@ -15,7 +15,7 @@ class Maymay
   # @option args [String]  :asset       [Required] Base maymay image (must be in asset folder)
   # @option args [int]     :x           [Optional] X coordinate of the drawn text (default = 0)
   # @option args [int]     :y           [Optional] Y coordinate of the drawn text (default = 0)
-  # @option args [String]  :textColor   [Optional] Color of the drawn text. Format #rrggbb (default = '#ffffff')
+  # @option args [String]  :textColor   [Optional] Color of the drawn text. Format rrggbb (default = 'ffffff'). # will be prepended automaticall.
   # @option args [String]  :textHandle  [Optional] Text handle (see handles folder for more informations about handles)
   def initialize(args)
     @asset = "assets/#{args['asset']}"
@@ -99,8 +99,8 @@ class Maymay
   def execute_gm(args)
     cmd = ["gm convert",
            args[:input],
-           '-stroke #000000',
-           "-fill #{args[:color]}",
+           '-stroke \#000000',
+           "-fill \##{args[:color]}",
            '-font "assets/impact-opt.ttf"',
            '-pointsize 50',
            "-draw \"text #{args[:x]},#{args[:y]} '#{args[:text]}'\"",
