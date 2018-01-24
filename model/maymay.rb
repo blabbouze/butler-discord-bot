@@ -29,7 +29,7 @@ class Maymay
     @text_handle = args['textHandle']
 
     @text_color = args['textColor']
-    @text_color = '#ffffff' if @text_color.nil?
+    @text_color = 'ffffff' if @text_color.nil?
   end
 
   
@@ -110,7 +110,7 @@ class Maymay
     cmd = ["gm convert",
            args[:input],
            '-stroke \#000000',
-           "-fill \##{args[:color]}",
+           "-fill \\##{args[:color]}",
            '-font "assets/impact-opt.ttf"',
            '-pointsize 50',
            "-draw \"text #{args[:x]},#{args[:y]} '#{args[:text]}'\"",
