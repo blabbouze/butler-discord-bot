@@ -42,6 +42,8 @@ class Maymay
   def generate(text)
     # Call text handle to modify text if necessary
     text = HANDLES::TEXT.send(@text_handle, text, '') if @text_handle
+    # Escape all ' and " characters
+    text.gsub!(/['"]/) { |x| "\\#{x}" }
 
     # Center text if needed
     image_width = 500
