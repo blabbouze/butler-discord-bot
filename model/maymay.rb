@@ -1,12 +1,35 @@
+require 'fastimage'
+
 require_relative '../handles/textHandles.rb'
+require_relative '../handles/assetHandles.rb'
 
 # Model of a maymay
 # Once initialized, call generate(text) to generate the maymay with given text.
 class Maymay
 
+  ############
+  # Contants #
+  ############
+
+  # Name of the folder that contains base images of maymay. 
+  MAYMAY_ORIGIN_FOLDER = 'assets'
+
   # Name of the folder that will contains maymay with generated text
   # If you change this please update .gitignore to not push generated maymay into git.
   MAYMAY_OUT_FOLDER = 'out'
+
+
+  #############
+  # Accessors #
+  #############
+
+  # Allow to read asset file
+  attr_reader :asset
+
+
+  #############
+  # Functions #
+  #############
 
   # Constructor
   #
@@ -26,7 +49,8 @@ class Maymay
     @y_txt_coord = args['y']
     @y_txt_coord = 0 if @y_txt_coord.nil?
 
-    @text_handle = args['textHandle']
+    @text_handle = args['textHandler']
+    @asset_handle = args['assetHandler']
 
     @text_color = args['textColor']
     @text_color = 'ffffff' if @text_color.nil?
@@ -36,21 +60,33 @@ class Maymay
   #
   # Generate current maymay
   #
-  # @param text  [string] Text to print on the maymay
+  # @param text  [string]         Text to print on the maymay
+  # @param args  [Array<string>]  (optional, default = nil). Arguments that will be passed to handlers.
   #
   # @return output_file_path [string] Path to the generated maymay
-  def generate(text)
+  def generate(text, args = nil)
     # Call text handle to modify text if necessary
-    text = HANDLES::TEXT.send(@text_handle, text, '') if @text_handle
+    text = HANDLES::TEXT.send(@text_handle, text, args) if @text_handle
     # Escape all ' and " characters
     text.gsub!(/['"]/) { |x| "\\#{x}" }
 
+    # Get asset name
+    asset = @asset
+    asset = HANDLES::ASSET.send(@asset_handle, text, args) if @asset_handle 
+    
+    # Compute file path
+    input_file_path = "#{MAYMAY_ORIGIN_FOLDER}/#{asset}"
+    unless File.exists?(input_file_path)
+      puts "[ERROR] #{input_file_path} does not exists. Check your configuration file !"
+      return 
+    end
+
     # Center text if needed
-    image_width = 500
+    image_width = FastImage.size(input_file_path)[0]
     char_width = 26
 
     lines = format_text(text, 22)
-    line_width =  lines.map(&:size).max * char_width
+    line_width = lines.map(&:size).max * char_width
 
     x = image_width / 2 - line_width / 2 + 20
     x = @x_txt_coord if x < @x_txt_coord
@@ -61,11 +97,11 @@ class Maymay
     # Create output directory if it doesn't exists
     Dir.mkdir(MAYMAY_OUT_FOLDER) unless Dir.exists?(MAYMAY_OUT_FOLDER)
     # Compute output file
-    output_file_path = "#{MAYMAY_OUT_FOLDER}/#{@asset}"
+    output_file_path = "#{MAYMAY_OUT_FOLDER}/#{asset}"
 
     # Create maymay with given arguments
     args = {
-      input: "assets/#{@asset}",
+      input: input_file_path,
       output: output_file_path,
       color: @text_color,
       x: x,
@@ -77,6 +113,10 @@ class Maymay
     # Send back path to the maymay
     return output_file_path
   end
+
+  ######################
+  # Internal functions #
+  ######################
 
   # Split given text with carriage return if the line exceed given size.
   #
