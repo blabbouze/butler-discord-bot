@@ -1,3 +1,5 @@
+require_relative '../service/disrespectService.rb'
+
 # Contains text handle functions.
 #
 # It is used to alter the text of a command if needed. e.g. : add string 'zer' to each maymay.
@@ -25,8 +27,11 @@ module HANDLES
   module TEXT
     extend self
 
-    def addZer(originalText, commandArgs)
-      "#{originalText} zer"
+    def disrespect(originalText, args)
+      return DisrespectService.add_and_generate(originalText) unless args.include?('--force') or args.include?('-f')
+
+      DisrespectService.add_punchline(originalText)
+      return originalText
     end
   end
 end

@@ -37,15 +37,21 @@ begin
     maymays[id_command] = Maymay.new(command_args)
 
     # Create discord command
-    bot.command id_command do |event, *text|
+    bot.command id_command do |event, *args|
       # Remove command invocation
       event.message.delete
 
+      # split args and text
+      args, text = args.partition { |arg| arg.start_with?('-') }
+
+      puts "args : #{args}"
+      puts "text : #{text}"
+
       # Generate requested maymay
-      generated_maymay = maymays[event.command.name].generate(text.join(' '))
+      generated_maymay = maymays[event.command.name].generate(text.join(' '), args)
 
       # Send it to the current text chanel
-      event << event.author.username
+      event << "#{event.author.username} :"
       event.attach_file(File.open(generated_maymay,'r'))
     end
 
